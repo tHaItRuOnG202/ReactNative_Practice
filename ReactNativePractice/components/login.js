@@ -5,7 +5,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from "reac
 import { Link } from "react-router-native";
 import { windowHeight, windowWidth } from "../utils/dimensions";
 
-const Login = () => {
+const Login = ({ navigation }) => {
     return (
         <Fragment>
             <View style={styles.container}>
@@ -25,15 +25,14 @@ const Login = () => {
                             <Text style={styles.buttonText}>Đăng nhập</Text>
                         </TouchableOpacity>
                     </Link>
-                    <TouchableOpacity style={styles.forgotButton} onPress={() => { }}>
-                        <Text style={styles.navButtonText}>Quên mật khẩu?</Text>
+                    <TouchableOpacity style={styles.forgotButton}>
+                        <Text style={styles.navButtonText}>Bạn quên mật khẩu ư?</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.forgotButton}>
-                        <Text style={styles.navButtonText}>
-                            Bạn chưa có tài khoản? Đăng ký <Link to="/register"><Text style={styles.navButtonText}>tại đây</Text></Link>
-                        </Text>
-                    </TouchableOpacity>
+                    <Link to="/register">
+                        <TouchableOpacity style={styles.buttonRegister} onPress={() => navigation.navigate('Đăng ký')}>
+                            <Text style={styles.buttonRegisterText}>Đăng ký tài khoản mới</Text>
+                        </TouchableOpacity>
+                    </Link>
                 </View>
             </View>
         </Fragment>
@@ -117,6 +116,24 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 3,
     },
+    buttonRegister: {
+        marginTop: 20,
+        width: '100%',
+        height: windowHeight / 15,
+        backgroundColor: 'white',
+        padding: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: '#2e64e5'
+    },
+    buttonRegisterText: {
+        fontSize: 18,
+        fontWeight: '500',
+        color: '#2e64e5',
+        textAlign: 'center'
+    }
 });
 
 export default Login;
