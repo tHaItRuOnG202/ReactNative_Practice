@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import { Image, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { Button, Text, View } from "react-native";
 import { Link } from "react-router-native";
-import { windowHeight, windowWidth } from "../utils/dimensions";
+import { windowHeight, windowWidth } from "../utils/Dimensions";
 import { MaterialIcons } from "@expo/vector-icons";
 
 const Register = ({ navigation }) => {
