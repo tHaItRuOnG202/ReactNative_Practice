@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyUserReducer from "./reducers/MyUserReducer";
 import { createContext } from 'react';
 import Login from './components/Login';
+import Profile from './components/Profile';
 
 export const MyUserContext = createContext();
 
@@ -46,6 +47,31 @@ export default function App() {
               <Stack.Screen name="Đăng nhập" component={Login} />
               <Stack.Screen name="Trang chủ" component={MainScreen} options={{ headerShown: false }} />
               <Stack.Screen name="Đăng ký" component={Register} />
+              <Stack.Screen
+                name="Trang cá nhân"
+                component={Profile}
+                options={{
+                  headerTitleAlign: 'center',
+                  headerTitleStyle: {
+                    color: 'black',
+                    fontSize: 18,
+                  },
+                  headerStyle: {
+                    shadowColor: '#fff',
+                    elevation: 0,
+                  },
+                  headerRight: () => (
+                    <View style={{ marginRight: 10 }}>
+                      <FontAwesome5.Button
+                        name="search"
+                        size={20}
+                        backgroundColor="#fff"
+                        color="black"
+                      />
+                    </View>
+                  ),
+                }}
+              />
               <Stack.Screen
                 name="IMPROOK SOCIAL"
                 component={Home}

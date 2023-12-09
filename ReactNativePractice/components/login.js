@@ -249,7 +249,7 @@ const Login = ({ navigation }) => {
                         <Text style={styles.navButtonText}>Bạn quên mật khẩu ư?</Text>
                     </TouchableOpacity>
                     <Link to="/register">
-                        <TouchableOpacity style={styles.buttonRegister} onPress={navigation.navigate('Đăng ký')}>
+                        <TouchableOpacity style={styles.buttonRegister} onPress={() => navigation.navigate('Đăng ký')}>
                             <Text style={styles.buttonRegisterText}>Đăng ký tài khoản mới</Text>
                         </TouchableOpacity>
                     </Link>

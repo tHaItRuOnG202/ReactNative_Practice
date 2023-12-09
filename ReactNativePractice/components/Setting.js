@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View, ScrollView } from 'react-native';
 import VectorIcon from '../utils/VectorIcon';
@@ -7,6 +7,9 @@ import { useContext } from 'react';
 import { MyUserContext } from "../App";
 import { Colors } from '../utils/Colors';
 import { Image } from 'react-native';
+import { windowWidth } from '../utils/Dimensions';
+import Collapsible from 'react-native-collapsible';
+import { AntDesign } from '@expo/vector-icons';
 
 const Setting = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -16,6 +19,17 @@ const Setting = ({ navigation }) => {
         })
         navigation.navigate('Đăng nhập')
     }
+
+    const [helpExpanded, setHelpExpanded] = useState(false);
+    const [settingExpanded, setSettingExpanded] = useState(false);
+
+    const toggleHelp = () => {
+        setHelpExpanded(!helpExpanded);
+    };
+
+    const toggleSetting = () => {
+        setSettingExpanded(!settingExpanded);
+    };
 
     return (
         <>
@@ -39,20 +53,136 @@ const Setting = ({ navigation }) => {
                         </View>
                     </View>
                 </View>
-                <View style={styles.profileContainer}>
-                    <Image source={{ uri: user.avatar }} style={styles.profileStyle} />
-                    <View style={styles.inputBox}>
-                        <Text style={styles.inputStyle}>{user.lastname} {user.firstname}</Text>
-                    </View>
-                    <TouchableOpacity style={styles.profileExpandIcon}>
-                        <VectorIcon
-                            name="expand-more"
-                            type="MaterialIcons"
-                            size={19}
-                        />
+                <View>
+                    <TouchableOpacity onPress={() => navigation.navigate('Trang cá nhân')} style={styles.profileContainer}>
+                        <Image source={{ uri: user.avatar }} style={styles.profileStyle} />
+                        <View style={styles.inputBox}>
+                            <Text style={styles.inputStyle}>{user.lastname} {user.firstname}</Text>
+                        </View>
+                        <TouchableOpacity style={styles.profileExpandIcon}>
+                            <VectorIcon
+                                name="expand-more"
+                                type="MaterialIcons"
+                                size={19}
+                            />
+                        </TouchableOpacity>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.profileContainer}>
+                <View style={styles.utilTab}>
+                    <View style={styles.utilTabRow}>
+                        <TouchableOpacity style={styles.tabItemContainer}>
+                            <View style={{ paddingTop: 20, paddingBottom: 20, paddingLeft: 10 }}>
+                                <VectorIcon
+                                    name="newspaper"
+                                    type="FontAwesome5"
+                                    size={21}>
+                                </VectorIcon>
+                                <Text style={styles.tabItemText}>Bảng feed</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.tabItemContainer}>
+                            <View style={{ paddingTop: 20, paddingBottom: 20, paddingLeft: 10 }}>
+                                <VectorIcon
+                                    name="account-group"
+                                    type="MaterialCommunityIcons"
+                                    size={21}>
+                                </VectorIcon>
+                                <Text style={styles.tabItemText}>Nhóm</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.utilTabRow}>
+                        <TouchableOpacity style={styles.tabItemContainer}>
+                            <View style={{ paddingTop: 20, paddingBottom: 20, paddingLeft: 10 }}>
+                                <VectorIcon
+                                    name="shop"
+                                    type="Entypo"
+                                    size={21}>
+                                </VectorIcon>
+                                <Text style={styles.tabItemText}>MarketPlace</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.tabItemContainer}>
+                            <View style={{ paddingTop: 20, paddingBottom: 20, paddingLeft: 10 }}>
+                                <VectorIcon
+                                    name="youtube-tv"
+                                    type="MaterialCommunityIcons"
+                                    size={21}>
+                                </VectorIcon>
+                                <Text style={styles.tabItemText}>Video</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.utilTabRow}>
+                        <TouchableOpacity style={styles.tabItemContainer}>
+                            <View style={{ paddingTop: 20, paddingBottom: 20, paddingLeft: 10 }}>
+                                <VectorIcon
+                                    name="event"
+                                    type="MaterialIcons"
+                                    size={21}>
+                                </VectorIcon>
+                                <Text style={styles.tabItemText}>Sự kiện</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.tabItemContainer}>
+                            <View style={{ paddingTop: 20, paddingBottom: 20, paddingLeft: 10 }}>
+                                <VectorIcon
+                                    name="poll"
+                                    type="FontAwesome5"
+                                    size={21}>
+                                </VectorIcon>
+                                <Text style={styles.tabItemText}>Khảo sát</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <View>
+                    <View>
+                        <TouchableOpacity onPress={toggleHelp}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <VectorIcon
+                                    name="question-circle"
+                                    type="FontAwesome5"
+                                    size={20}
+                                />
+                                <Text style={{ marginRight: 8 }}>Trợ giúp & hỗ trợ</Text>
+                                <AntDesign
+                                    name={helpExpanded ? 'up' : 'down'}
+                                    size={18}
+                                    color="black"
+                                />
+                            </View>
+                        </TouchableOpacity>
+                        <Collapsible collapsed={!helpExpanded}>
+                            <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
+                                <Text>Trợ giúp & hỗ trợ</Text>
+                            </View>
+                        </Collapsible>
+                    </View>
+                    <View>
+                        <TouchableOpacity onPress={toggleSetting}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <VectorIcon
+                                    name="cog"
+                                    type="FontAwesome5"
+                                    size={20}
+                                />
+                                <Text style={{ marginRight: 8 }}>Cài đặt & quyền riêng tư</Text>
+                                <AntDesign
+                                    name={settingExpanded ? 'up' : 'down'}
+                                    size={18}
+                                    color="black"
+                                />
+                            </View>
+                        </TouchableOpacity>
+                        <Collapsible collapsed={!settingExpanded}>
+                            <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
+                                <Text>Cài đặt & quyền riêng tư</Text>
+                            </View>
+                        </Collapsible>
+                    </View>
+                </View>
+                <View style={styles.logoutContainer}>
                     <TouchableOpacity onPress={logout}>
                         <Text style={styles.inputStyle}>Đăng xuất</Text>
                     </TouchableOpacity>
@@ -104,15 +234,45 @@ const styles = StyleSheet.create({
         padding: 18,
         backgroundColor: Colors.white,
         alignItems: 'center',
+        marginLeft: 8,
+        marginRight: 8,
+        borderRadius: 10
     },
     logoutContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        flex: 1,
+        justifyContent: 'center',
         padding: 18,
         marginTop: 10,
         backgroundColor: '#EBECF0',
         alignItems: 'center',
     },
+    utilTab: {
+        display: 'flex',
+        marginTop: 10,
+        marginLeft: 8,
+        marginRight: 8
+    },
+    utilTabRow: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 5
+    },
+    tabItemContainer: {
+        borderRadius: 10,
+        backgroundColor: 'white',
+        shadowColor: 'rgba(0, 0, 0, 1)',
+        shadowOffset: {
+            width: 8,
+            height: 8,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 20,
+        width: windowWidth / 2.12
+    },
+    tabItemText: {
+        fontSize: 20
+    }
 });
 
 export default Setting;
