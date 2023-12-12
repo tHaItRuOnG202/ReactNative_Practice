@@ -1,18 +1,34 @@
 import { ScrollView } from 'native-base';
-import React, { useContext } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { Image, Modal, StyleSheet, Text, View } from 'react-native';
 import { MyUserContext } from '../App';
 import VectorIcon from '../utils/VectorIcon';
 import { windowHeight, windowWidth } from '../utils/Dimensions';
 import PostStatus from './PostStatus';
+import axios from 'axios';
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
+    const [userInfo, setUserInfo] = useState();
+
+    const getCurrentUser = async () => {
+        try {
+            let res = await axios.get(`http://192.168.1.134:8000/users/${user.id}/account/`)
+            setUserInfo(res.data);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    useEffect(() => {
+        getCurrentUser();
+    }, [])
+
     return (
         <>
             <ScrollView>
                 <View>
-                    <Image source={{ uri: user.avatar }} style={styles.coverPhoto} />
+                    <Image source={{ uri: userInfo?.avatar }} style={styles.coverPhoto} />
                     <View style={styles.avatarChange}>
                         <VectorIcon
                             name="camera"
@@ -23,7 +39,7 @@ const Profile = () => {
                 </View>
                 <View style={styles.dpContainer}>
                     <View style={styles.dpBlueRound}>
-                        <Image style={styles.dp} source={{ uri: user.avatar }} />
+                        <Image style={styles.dp} source={{ uri: userInfo?.cover_avatar }} />
                         <View style={styles.avatarChange}>
                             <VectorIcon
                                 name="camera"
@@ -33,7 +49,7 @@ const Profile = () => {
                         </View>
                     </View>
                 </View>
-                <Text style={styles.name}>{user.lastname} {user.firstname}</Text>
+                <Text style={styles.name}>{user.last_name} {user.first_name}</Text>
                 <Text style={styles.shortBio}>Trưởng phòng Y Tế Nhà Bè</Text>
 
                 <View style={styles.profileTabsContainer}>
@@ -99,7 +115,7 @@ const Profile = () => {
                     </Text>
                 </View>
                 <View style={styles.divider}></View>
-                <PostStatus />
+                <PostStatus navigation={navigation} />
             </ScrollView>
         </>
     );
@@ -172,7 +188,7 @@ const styles = StyleSheet.create({
     },
     tabContainer: {
         height: 90,
-        width: 95,
+        width: windowWidth / 4.2,
         alignItems: 'center',
         justifyContent: 'center',
     },

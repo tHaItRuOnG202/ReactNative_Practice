@@ -1,9 +1,9 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Fragment } from "react";
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from "react-native";
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, Image, ScrollView } from "react-native";
 import { Link } from "react-router-native";
 import { windowHeight, windowWidth } from "../utils/Dimensions";
-import Apis, { endpoints } from "../configs/Apis";
+import Apis, { djangoAuthApi, endpoints } from "../configs/Apis";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import axios from "axios";
@@ -15,6 +15,8 @@ const Login = ({ navigation }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+
+    const [count, setCount] = useState('');
 
     // const login = (evt) => {
     //     evt.preventDefault();
@@ -167,20 +169,102 @@ const Login = ({ navigation }) => {
     // };
 
 
+    // const login = async () => {
+    //     try {
+    //         const res = await axios.post('http://192.168.1.134:2024/IMPROOK_CARE/api/public/login/', {
+    //             'username': username,
+    //             'password': password
+    //         })
+
+    //         await AsyncStorage.setItem('token', res.data);
+    //         const data = await axios.get('http://192.168.1.134:2024/IMPROOK_CARE/api/auth/current-user/', {
+    //             headers: {
+    //                 'Authorization': res.data,
+    //             },
+    //         });
+    //         await AsyncStorage.setItem('user', JSON.stringify(data));
+
+    //         dispatch({
+    //             "type": "login",
+    //             "payload": data.data
+    //         });
+
+    //         if (res.status === 200) {
+    //             console.log('Đăng nhập thành công');
+    //             navigation.navigate('Trang chủ');
+    //             setUsername('');
+    //             setPassword('');
+    //         } else {
+    //             console.log('Đăng nhập thất bại');
+    //         }
+    //     } catch (error) {
+    //         console.log('Lỗi mạng', error);
+    //     }
+    // };
+
+    // const login = async () => {
+    //     try {
+    //         const res = await axios.get('http://192.168.1.134:2024/IMPROOK_CARE/api/public/roles/');
+
+    //         console.log(res.data);
+
+    //         if (res.status === 200) {
+    //             console.log('Đăng nhập thành công', res.data);
+    //             navigation.navigate('Trang chủ')
+    //         } else {
+    //             console.log('Đăng nhập thất bại');
+    //         }
+    //     } catch (error) {
+    //         console.log('Lỗi mạng', error);
+    //     }
+    // };
+
+    // const test = async () => {
+    //     try {
+    //         const res = await axios.get(endpoints['account']);
+    //         console.log(res.data.count);
+    //         setCount(res.data.count);
+    //         console.log("Thành công");
+    //     } catch (error) {
+    //         console.log('Lỗi mạng', error);
+    //     }
+    // };
+
     const login = async () => {
         try {
-            const res = await axios.post('http://192.168.1.134:2024/IMPROOK_CARE/api/public/login/', {
-                'username': username,
-                'password': password
-            })
+            let form = new FormData();
+            form.append("username", 'admin')
+            form.append("password", '123456')
+            form.append('client_id', 'zDnklZ6ztQVU0X4DOQEymwV96MfWhW3Hk2VHq3D9')
+            form.append('client_secret', 'Wo2j1Qn6UKI691i30hmc4gZ7JCTazZ18KXNne7n2IYihCYoEw3PozWTtPc0CkiKZHtMBxOFTWISj83R5cSODQbCh9uTmNb5eefA4W9TwZmzI0D0smpz6bBf8CgSNnYDj')
+            //Lưu chỗ nào đó
+            form.append('grant_type', 'password')
 
-            await AsyncStorage.setItem('token', res.data);
-            const data = await axios.get('http://192.168.1.134:2024/IMPROOK_CARE/api/auth/current-user/', {
+            // const res = await axios.post(endpoints['djlogin'], {
+            //     'username': username,
+            //     'password': password,
+            //     'client_id'
+            // })
+
+            let res = await djangoAuthApi().post(endpoints['djlogin'], form, {
                 headers: {
-                    'Authorization': res.data,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            console.log(res.data);
+
+            // const token = res.data.access_token
+
+            await AsyncStorage.setItem('token', res.data.access_token);
+            const data = await axios.get('http://192.168.1.134:8000/users/current-user/', {
+                headers: {
+                    'Authorization': res.data.token_type + " " + res.data.access_token,
                 },
             });
             await AsyncStorage.setItem('user', JSON.stringify(data));
+
+            console.log(data.data)
 
             dispatch({
                 "type": "login",
@@ -199,23 +283,6 @@ const Login = ({ navigation }) => {
             console.log('Lỗi mạng', error);
         }
     };
-
-    // const login = async () => {
-    //     try {
-    //         const res = await axios.get('http://192.168.1.134:2024/IMPROOK_CARE/api/public/roles/');
-
-    //         console.log(res.data);
-
-    //         if (res.status === 200) {
-    //             console.log('Đăng nhập thành công', res.data);
-    //             navigation.navigate('Trang chủ')
-    //         } else {
-    //             console.log('Đăng nhập thất bại');
-    //         }
-    //     } catch (error) {
-    //         console.log('Lỗi mạng', error);
-    //     }
-    // };
 
     return (
         <Fragment>
@@ -245,11 +312,16 @@ const Login = ({ navigation }) => {
                             <Text style={styles.buttonText}>Đăng nhập</Text>
                         </TouchableOpacity>
                     </Link>
+                    {/* <Link to="/register">
+                        <TouchableOpacity style={styles.buttonContainer} onPress={test}>
+                            <Text style={styles.buttonText}>Đăng nhập</Text>
+                        </TouchableOpacity>
+                    </Link> */}
                     <TouchableOpacity style={styles.forgotButton}>
                         <Text style={styles.navButtonText}>Bạn quên mật khẩu ư?</Text>
                     </TouchableOpacity>
                     <Link to="/register">
-                        <TouchableOpacity style={styles.buttonRegister} onPress={() => navigation.navigate('Đăng ký')}>
+                        <TouchableOpacity style={styles.buttonRegister} onPress={() => navigation.navigate('Bài đăng')}>
                             <Text style={styles.buttonRegisterText}>Đăng ký tài khoản mới</Text>
                         </TouchableOpacity>
                     </Link>

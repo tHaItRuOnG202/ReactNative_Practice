@@ -5,6 +5,8 @@ import { Button, Image, ScrollView, StyleSheet, View } from "react-native";
 import { openPicker } from '@baronha/react-native-multiple-image-picker';
 import { Colors } from '../utils/Colors';
 import SubHeader from "./SubHeader";
+import PostHeader from "./PostHeader";
+import PostFooter from "./PostFooter";
 
 const Home = () => {
     // const [images, setImages] = useState([]);
@@ -34,6 +36,8 @@ const Home = () => {
                 <Button title="Select Images" onPress={selectImages} />
                 <Button title="Upload Images" onPress={uploadImages} /> */}
                 <SubHeader />
+                <PostHeader />
+                <PostFooter />
             </ScrollView>
         </Fragment>
     )

@@ -1,14 +1,29 @@
 import { View, TextInput, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CameraRoll from '../images/cameraroll.png';
 import { Colors } from '../utils/Colors';
 import * as ImagePicker from 'expo-image-picker';
 import { useContext } from 'react';
 import { MyUserContext } from "../App";
 import VectorIcon from '../utils/VectorIcon';
+import axios from 'axios';
 
-const PostStatus = () => {
+const PostStatus = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
+    const [userInfo, setUserInfo] = useState();
+
+    const getCurrentUser = async () => {
+        try {
+            let res = await axios.get(`http://192.168.1.134:8000/users/${user.id}/account/`)
+            setUserInfo(res.data);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    useEffect(() => {
+        getCurrentUser();
+    }, [])
 
     const openImagePicker = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -37,10 +52,12 @@ const PostStatus = () => {
         <View style={styles.wrapper}>
             <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Posts</Text>
             <View style={styles.container}>
-                <Image source={{ uri: user.avatar }} style={styles.profileStyle} />
-                <View style={styles.inputBox}>
-                    <Text style={styles.inputStyle}>Post a status, {user.firstname}?</Text>
-                </View>
+                <Image source={{ uri: userInfo?.avatar }} style={styles.profileStyle} />
+                <TouchableOpacity style={styles.inputBox} onPress={() => navigation.navigate('Bài đăng')}>
+                    <View>
+                        <Text style={styles.inputStyle}>Post a status, {user.first_name}?</Text>
+                    </View>
+                </TouchableOpacity>
                 <TouchableOpacity onPress={openImagePicker}>
                     <Image source={CameraRoll} style={styles.cameraRoll} />
                 </TouchableOpacity>

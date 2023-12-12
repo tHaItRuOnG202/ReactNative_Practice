@@ -14,6 +14,7 @@ import MyUserReducer from "./reducers/MyUserReducer";
 import { createContext } from 'react';
 import Login from './components/Login';
 import Profile from './components/Profile';
+import Post from './components/Post';
 
 export const MyUserContext = createContext();
 
@@ -47,6 +48,7 @@ export default function App() {
               <Stack.Screen name="Đăng nhập" component={Login} />
               <Stack.Screen name="Trang chủ" component={MainScreen} options={{ headerShown: false }} />
               <Stack.Screen name="Đăng ký" component={Register} />
+              <Stack.Screen name="Bài đăng" component={Post} />
               <Stack.Screen
                 name="Trang cá nhân"
                 component={Profile}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View, ScrollView } from 'react-native';
 import VectorIcon from '../utils/VectorIcon';
@@ -10,6 +10,7 @@ import { Image } from 'react-native';
 import { windowWidth } from '../utils/Dimensions';
 import Collapsible from 'react-native-collapsible';
 import { AntDesign } from '@expo/vector-icons';
+import axios from 'axios';
 
 const Setting = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -30,6 +31,20 @@ const Setting = ({ navigation }) => {
     const toggleSetting = () => {
         setSettingExpanded(!settingExpanded);
     };
+    const [userInfo, setUserInfo] = useState();
+
+    const getCurrentUser = async () => {
+        try {
+            let res = await axios.get(`http://192.168.1.134:8000/users/${user.id}/account/`)
+            setUserInfo(res.data);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    useEffect(() => {
+        getCurrentUser();
+    }, [])
 
     return (
         <>
@@ -55,9 +70,9 @@ const Setting = ({ navigation }) => {
                 </View>
                 <View>
                     <TouchableOpacity onPress={() => navigation.navigate('Trang cá nhân')} style={styles.profileContainer}>
-                        <Image source={{ uri: user.avatar }} style={styles.profileStyle} />
+                        <Image source={{ uri: userInfo?.avatar }} style={styles.profileStyle} />
                         <View style={styles.inputBox}>
-                            <Text style={styles.inputStyle}>{user.lastname} {user.firstname}</Text>
+                            <Text style={styles.inputStyle}>{user.last_name} {user.first_name}</Text>
                         </View>
                         <TouchableOpacity style={styles.profileExpandIcon}>
                             <VectorIcon
